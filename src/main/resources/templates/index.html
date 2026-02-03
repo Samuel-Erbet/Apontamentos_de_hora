@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apontamentos</title>
+    <script th:src="@{/js/script.js}"></script>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<form id="form" th:action="@{/apontamentos/form/save}" th:object="${apontamentos}" method="post">
+
+    <h1 id="title">Apontamentos</h1>
+    <div class="questions">
+        <input type="hidden" th:field="*{funcionario.nome}">
+        <input type="hidden" th:field="*{funcionario.matricula}">
+        <input type="hidden" th:field="*{funcionario.turno}">
+
+
+
+            <div class="fields">
+                <label class="form-label">nome:</label>
+                <input class="form-control-input readonly-field" type="text" th:value="*{funcionario.nome}" readonly>
+            </div>
+
+            <div class="fields">
+                <label class="form-label">matrícula:</label>
+                <input class="form-control-input readonly-field" type="text" th:value="*{funcionario.matricula}" readonly>
+            </div>
+
+            <div class="fields">
+                <label class="form-label">turno:</label>
+                <input class="form-control-input readonly-field" type="text" th:value="*{funcionario.turno}" readonly>
+            </div>
+
+            <div class="fields">
+                <label class="form-label">unidade:</label>
+                <input class="form-control-input" type="text" th:field="*{unidade}">
+            </div>
+
+            <div class="fields">
+                <label class="form-label">data:</label>
+                <input class="form-control-input" type="date" th:field="*{data}">
+            </div>
+
+    </div>
+
+    <div id="container-tasks">
+        <div class="line-tasks" id="linha-0">
+            <div class="input-group">
+                <label class="form-label">código de parada</label>
+                <select class="form-control-option" name="itens[0].codigoParada">
+                    <option value="" disabled selected>Selecione...</option>
+                    <option value="2">2 - Atestado</option>
+                    <option value="3">3 - INSS</option>
+                    <option value="4">4 - Férias</option>
+                    <option value="1b">1b - Atividade Rentável</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label class="form-label">Numero da Os</label>
+                <input class="form-control" type="text" name="itens[0].numeroOs">
+            </div>
+
+            <div class="input-group">
+                <label class="form-label">Descrição da tarefa</label>
+                <input class="form-control" type="text" name="itens[0].descricao">
+            </div>
+
+            <div class="input-group">
+                <label class="form-label">inicio da tarefa</label>
+                <input class="form-control" type="time" name="itens[0].horarioInicio">
+            </div>
+
+            <div class="input-group">
+                <label class="form-label">fim da tarefa</label>
+                <input class="form-control" type="time" name="itens[0].horarioFim">
+            </div>
+
+            <button class="lineButtonAdd" type="button" onclick="adicionarHora()">adicionar</button>
+            <button class="lineButtonRemove" type="button" onclick="removerHora(this)">remover</button>
+        </div>
+
+        <div class="line-tasks" id="linha-1">
+            <div class="input-group">
+                <label class="form-label">código de parada</label>
+                <select class="form-control-option" name="itens[1].codigoParada">
+                    <option value="" disabled selected>Selecione...</option>
+                    <option value="2">2 - Atestado</option>
+                    <option value="3">3 - INSS</option>
+                    <option value="4">4 - Férias</option>
+                    <option value="1b">1b - Atividade Rentável</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label class="form-label">Numero da Os</label>
+                <input class="form-control" type="text" name="itens[1].numeroOs">
+            </div>
+
+            <div class="input-group">
+                <label class="form-label">Descrição da tarefa</label>
+                <input class="form-control" type="text" name="itens[1].descricao">
+            </div>
+
+            <div class="input-group">
+                <label class="form-label">inicio da tarefa</label>
+                <input class="form-control" type="time" name="itens[1].horarioInicio">
+            </div>
+
+            <div class="input-group">
+                <label class="form-label">fim da tarefa</label>
+                <input class="form-control" type="time" name="itens[1].horarioFim">
+            </div>
+
+            <button class="lineButtonAdd" type="button" onclick="adicionarHora()">adicionar</button>
+            <button class="lineButtonRemove" type="button" onclick="removerHora(this)">remover</button>
+        </div>
+
+        <div class="line-tasks" id="linha-2">
+            <div class="input-group">
+                <label class="form-label">código de parada</label>
+                <select class="form-control-option" name="itens[2].codigoParada">
+                    <option value="" disabled selected>Selecione...</option>
+                    <option value="2">2 - Atestado</option>
+                    <option value="3">3 - INSS</option>
+                    <option value="4">4 - Férias</option>
+                    <option value="1b">1b - Atividade Rentável</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label class="form-label">Numero da Os</label>
+                <input class="form-control" type="text" name="itens[2].numeroOs">
+            </div>
+
+            <div class="input-group">
+                <label class="form-label">Descrição da tarefa</label>
+                <input class="form-control" type="text" name="itens[2].descricao">
+            </div>
+
+            <div class="input-group">
+                <label class="form-label">inicio da tarefa</label>
+                <input class="form-control" type="time" name="itens[2].horarioInicio">
+            </div>
+
+            <div class="input-group">
+                <label class="form-label">fim da tarefa</label>
+                <input class="form-control" type="time" name="itens[2].horarioFim">
+            </div>
+
+            <button class="lineButtonAdd" type="button" onclick="adicionarHora()">adicionar</button>
+            <button class="lineButtonRemove" type="button" onclick="removerHora(this)">remover</button>
+        </div>
+
+        <div class="line-tasks" id="linha-3">
+            <div class="input-group">
+                <label class="form-label">código de parada</label>
+                <select class="form-control-option" name="itens[3].codigoParada">
+                    <option value="" disabled selected>Selecione...</option>
+                    <option value="2">2 - Atestado</option>
+                    <option value="3">3 - INSS</option>
+                    <option value="4">4 - Férias</option>
+                    <option value="1b">1b - Atividade Rentável</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label class="form-label">Numero da Os</label>
+                <input class="form-control" type="text" name="itens[3].numeroOs">
+            </div>
+
+            <div class="input-group">
+                <label class="form-label">Descrição da tarefa</label>
+                <input class="form-control" type="text" name="itens[3].descricao">
+            </div>
+
+            <div class="input-group">
+                <label class="form-label">inicio da tarefa</label>
+                <input class="form-control" type="time" name="itens[3].horarioInicio">
+            </div>
+
+            <div class="input-group">
+                <label class="form-label">fim da tarefa</label>
+                <input class="form-control" type="time" name="itens[3].horarioFim">
+            </div>
+
+            <button class="lineButtonAdd" type="button" onclick="adicionarHora()">adicionar</button>
+            <button class="lineButtonRemove" type="button" onclick="removerHora(this)">remover</button>
+        </div>
+    </div>
+    <button class="button" type="submit">Enviar apontamento</button>
+</form>
+</body>
+</html>

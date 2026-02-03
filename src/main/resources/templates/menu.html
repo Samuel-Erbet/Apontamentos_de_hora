@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu - Apontamentos</title>
+    <link rel="stylesheet" th:href="@{/css/menu.css}">
+</head>
+<body>
+<h1>Menu Principal</h1>
+
+<div class="menu-container">
+
+    <div class="options">
+
+        <p class="message">Bem-vindo, <strong th:text="${#authentication.name}">Usuário</strong>!</p>
+
+        <a th:href="@{/apontamentos/meus-apontamentos}" class="btn">Ver Apontamentos</a>
+
+        <a th:href="@{/apontamentos}" class="btn">Fazer Apontamento</a>
+    
+    </div>
+</div>
+
+
+    <form th:action="@{/logout}" method="post">
+        <button class="exitButton" type="submit" style="background: #ff4444; color: white; border: none; padding: 5px 10px; cursor: pointer;">
+            Sair do Sistema
+        </button>
+    </form>
+</body>
+</html>
