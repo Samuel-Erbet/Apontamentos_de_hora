@@ -1,6 +1,7 @@
 package com.example.apontamento.controller;
 
 import com.example.apontamento.Entity.Apontamentos;
+import com.example.apontamento.Entity.ApontamentosForm;
 import com.example.apontamento.Entity.Funcionario;
 import com.example.apontamento.repository.ApontamentoRepository;
 import com.example.apontamento.repository.FuncionariosRepository;
@@ -31,9 +32,9 @@ public class View {
         Funcionario funcionarioLogado = funcionariosRepository.findByNome(nomeLogado)
                 .orElseThrow(() -> new RuntimeException("Usuario não encontrado"));
 
-        var apontamentos = new Apontamentos();
-        apontamentos.setFuncionario(funcionarioLogado);
-        mv.addObject("apontamentos", apontamentos);
+        var apontamentosForm = new ApontamentosForm();
+        apontamentosForm.setFuncionario(funcionarioLogado);
+        mv.addObject("apontamentos", apontamentosForm);
 
         return mv;
     }

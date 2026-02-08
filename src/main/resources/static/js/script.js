@@ -1,16 +1,36 @@
-let contador = 3;
-function adicionarHora(){
-    let container = document.getElementById("container-tasks");
-    let primeiraLinha = document.querySelector(".line-tasks");
-    let novaLinha = primeiraLinha.cloneNode(true);
+let contador = 4;
 
-    const inputs = novaLinha.querySelectorAll("input");
-    inputs.forEach(input => {
-        input.value = "";
-    });
+function adicionarHora() {
+    const container = document.getElementById('container-tasks');
+    const novaLinha = document.createElement('div');
+    novaLinha.className = 'line-tasks';
+
+
+    novaLinha.innerHTML = `
+        <div class="input-group">
+            <label class="form-label">código de parada</label>
+            <select class="form-control-option" name="itens[${contador}].codigoParada">
+                <option value="" selected>Selecione...</option>
+                <option value="2">2 - Atestado</option>
+                <option value="1b">1b - Atividade Rentável</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label class="form-label">Descrição</label>
+            <input class="form-control" type="text" name="itens[${contador}].descricao">
+        </div>
+        <div class="input-group">
+            <label class="form-label">Início</label>
+            <input class="form-control" type="time" name="itens[${contador}].horarioInicio">
+        </div>
+        <div class="input-group">
+            <label class="form-label">Fim</label>
+            <input class="form-control" type="time" name="itens[${contador}].horarioFim">
+        </div>
+    `;
 
     container.appendChild(novaLinha);
-    reordenarIndices();
+    contador++;
 }
 
 

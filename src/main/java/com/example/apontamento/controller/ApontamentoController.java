@@ -3,36 +3,33 @@ package com.example.apontamento.controller;
 import com.example.apontamento.Entity.Apontamentos;
 import com.example.apontamento.Entity.ApontamentosForm;
 import com.example.apontamento.repository.ApontamentoRepository;
-import com.example.apontamento.repository.FuncionariosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.Duration;
 import java.util.List;
 
 @Controller
 public class ApontamentoController {
 
+    // preciso fazer um css
+
+
     @Autowired
     private ApontamentoRepository repository;
 
 
     @PostMapping("apontamentos/form/save")
-    public String saveAPontamento(
-            @ModelAttribute("apontamentos") ApontamentosForm list,
-            Model model,
-            RedirectAttributes redirect
-    ){
-        var unidade = list.getItens().get(0).getUnidade();
-        var  data = list.getItens().get(0).getData();
+    public String saveAPontamento(@ModelAttribute("apontamentos") ApontamentosForm list, Model model) {
 
-        if (list.getFuncionario()==null || list.getFuncionario().getNome() == null || list.getFuncionario().getMatricula() == null || list.getFuncionario().getTurno() == null){
-            model.addAttribute("error", "preencha as informações necessárias.");
+        var unidadeGlobal = list.getItens().get(0).getUnidade();
+        var dataGlobal = list.getItens().get(0).getData();
+
+        if (unidadeGlobal == null || unidadeGlobal.isBlank() || dataGlobal == null) {
+            model.addAttribute("error", "Ô fera, preencha a UNIDADE e a DATA lá no topo!");
             return "index";
         }
 
@@ -41,45 +38,42 @@ public class ApontamentoController {
                 .toList();
 
         if (itensParaSalvar.isEmpty()) {
-            model.addAttribute("error", "Preencha pelo menos uma tarefa.");
+            model.addAttribute("error", "Preencha pelo menos UMA tarefa na lista abaixo.");
             return "index";
         }
 
-        double totalHorasValidas = 0;
-        for(Apontamentos ap : list.getItens() ){
-            if (ap.getCodigoParada() == null){
-                model.addAttribute("error", "preencha o código de parada.");
-                return "index";
-            } else if (ap.getData() == null){
-                model.addAttribute("error", "preencha a data.");
-                return "index";
-            } else if (ap.getHorarioInicio().isAfter(ap.getHorarioFim())){
-                model.addAttribute("error", "preencha o horário corretamente.");
-                return "index";
-            } else if (ap.getDescricao() == null){
-                model.addAttribute("error", "preencha a descrição.");
-                return "index";
-            } else if (ap.getCodigoParada().equalsIgnoreCase("1b") && ap.getNumeroOs() == null){
-                model.addAttribute("error", "preencha o número da Os.");
+        double totalMinutos = 0;
+
+        // 3. Loop que valida campo por campo das tarefas iniciadas
+        for (Apontamentos ap : itensParaSalvar) {
+            ap.setUnidade(unidadeGlobal);
+            ap.setData(dataGlobal);
+            ap.setFuncionario(list.getFuncionario());
+
+            if (ap.getDescricao() == null || ap.getDescricao().isBlank()) {
+                model.addAttribute("error", "Faltou a descrição em uma das tarefas!");
                 return "index";
             }
-            totalHorasValidas += Duration.between(ap.getHorarioInicio(), ap.getHorarioFim()).toMinutes();
+
+            if (ap.getHorarioInicio() == null || ap.getHorarioFim() == null) {
+                model.addAttribute("error", "Preencha os horários de início e fim!");
+                return "index";
+            }
+
+            if (ap.getHorarioInicio().isAfter(ap.getHorarioFim())) {
+                model.addAttribute("error", "Horário de início não pode ser maior que o fim, né?");
+                return "index";
+            }
+
+            totalMinutos += Duration.between(ap.getHorarioInicio(), ap.getHorarioFim()).toMinutes();
         }
 
-
-        if (totalHorasValidas < 480){
-            model.addAttribute("error", "Horários inválidos.");
+        if (totalMinutos < 480) {
+            model.addAttribute("error", "A soma das horas deu " + totalMinutos + " min. Precisa de pelo menos 480 (8h)!");
             return "index";
-        }
-
-        for (Apontamentos ap : list.getItens()) {
-            ap.setUnidade(unidade);
-            ap.setData(data);
-            ap.setFuncionario(list.getFuncionario());
         }
 
         repository.saveAll(itensParaSalvar);
-
         return "redirect:/success";
     }
 

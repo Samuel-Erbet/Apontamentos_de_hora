@@ -35,12 +35,12 @@
 
             <div class="fields">
                 <label class="form-label">unidade:</label>
-                <input class="form-control-input" type="text" th:field="*{unidade}">
+                <input class="form-control-input" type="text" th:field="*{itens[0].unidade}">
             </div>
 
             <div class="fields">
                 <label class="form-label">data:</label>
-                <input class="form-control-input" type="date" th:field="*{data}">
+                <input class="form-control-input" type="date" th:field="*{itens[0].data}">
             </div>
 
     </div>
@@ -49,7 +49,7 @@
         <div class="line-tasks" id="linha-0">
             <div class="input-group">
                 <label class="form-label">código de parada</label>
-                <select class="form-control-option" name="itens[0].codigoParada">
+                <select class="form-control-option" th:field="*{itens[0].codigoParada}">
                     <option value="" disabled selected>Selecione...</option>
                     <option value="2">2 - Atestado</option>
                     <option value="3">3 - INSS</option>
@@ -60,22 +60,22 @@
 
             <div class="input-group">
                 <label class="form-label">Numero da Os</label>
-                <input class="form-control" type="text" name="itens[0].numeroOs">
+                <input class="form-control" type="text" th:field="*{itens[0].numeroOs}">
             </div>
 
             <div class="input-group">
                 <label class="form-label">Descrição da tarefa</label>
-                <input class="form-control" type="text" name="itens[0].descricao">
+                <input class="form-control" type="text" th:field="*{itens[0].descricao}">
             </div>
 
             <div class="input-group">
                 <label class="form-label">inicio da tarefa</label>
-                <input class="form-control" type="time" name="itens[0].horarioInicio">
+                <input class="form-control" type="time" th:field="*{itens[0].horarioInicio}">
             </div>
 
             <div class="input-group">
                 <label class="form-label">fim da tarefa</label>
-                <input class="form-control" type="time" name="itens[0].horarioFim">
+                <input class="form-control" type="time" th:field="*{itens[0].horarioFim}">
             </div>
 
             <button class="lineButtonAdd" type="button" onclick="adicionarHora()">adicionar</button>
@@ -85,7 +85,7 @@
         <div class="line-tasks" id="linha-1">
             <div class="input-group">
                 <label class="form-label">código de parada</label>
-                <select class="form-control-option" name="itens[1].codigoParada">
+                <select class="form-control-option" th:field="*{itens[1].codigoParada}">
                     <option value="" disabled selected>Selecione...</option>
                     <option value="2">2 - Atestado</option>
                     <option value="3">3 - INSS</option>
@@ -96,22 +96,22 @@
 
             <div class="input-group">
                 <label class="form-label">Numero da Os</label>
-                <input class="form-control" type="text" name="itens[1].numeroOs">
+                <input class="form-control" type="text" th:field="*{itens[1].numeroOs}">
             </div>
 
             <div class="input-group">
                 <label class="form-label">Descrição da tarefa</label>
-                <input class="form-control" type="text" name="itens[1].descricao">
+                <input class="form-control" type="text" th:field="*{itens[1].descricao}">
             </div>
 
             <div class="input-group">
                 <label class="form-label">inicio da tarefa</label>
-                <input class="form-control" type="time" name="itens[1].horarioInicio">
+                <input class="form-control" type="time" th:field="*{itens[1].horarioInicio}">
             </div>
 
             <div class="input-group">
                 <label class="form-label">fim da tarefa</label>
-                <input class="form-control" type="time" name="itens[1].horarioFim">
+                <input class="form-control" type="time" th:field="*{itens[1].horarioFim}">
             </div>
 
             <button class="lineButtonAdd" type="button" onclick="adicionarHora()">adicionar</button>
@@ -121,7 +121,7 @@
         <div class="line-tasks" id="linha-2">
             <div class="input-group">
                 <label class="form-label">código de parada</label>
-                <select class="form-control-option" name="itens[2].codigoParada">
+                <select class="form-control-option" th:field="*{itens[2].codigoParada}">
                     <option value="" disabled selected>Selecione...</option>
                     <option value="2">2 - Atestado</option>
                     <option value="3">3 - INSS</option>
@@ -132,22 +132,22 @@
 
             <div class="input-group">
                 <label class="form-label">Numero da Os</label>
-                <input class="form-control" type="text" name="itens[2].numeroOs">
+                <input class="form-control" type="text" th:field="*{itens[2].numeroOs}">
             </div>
 
             <div class="input-group">
                 <label class="form-label">Descrição da tarefa</label>
-                <input class="form-control" type="text" name="itens[2].descricao">
+                <input class="form-control" type="text" th:field="*{itens[2].descricao}">
             </div>
 
             <div class="input-group">
                 <label class="form-label">inicio da tarefa</label>
-                <input class="form-control" type="time" name="itens[2].horarioInicio">
+                <input class="form-control" type="time" th:field="*{itens[2].horarioInicio}">
             </div>
 
             <div class="input-group">
                 <label class="form-label">fim da tarefa</label>
-                <input class="form-control" type="time" name="itens[2].horarioFim">
+                <input class="form-control" type="time" th:field="*{itens[2].horarioFim}">
             </div>
 
             <button class="lineButtonAdd" type="button" onclick="adicionarHora()">adicionar</button>
@@ -157,7 +157,7 @@
         <div class="line-tasks" id="linha-3">
             <div class="input-group">
                 <label class="form-label">código de parada</label>
-                <select class="form-control-option" name="itens[3].codigoParada">
+                <select class="form-control-option" th:field="*{itens[3].codigoParada}">
                     <option value="" disabled selected>Selecione...</option>
                     <option value="2">2 - Atestado</option>
                     <option value="3">3 - INSS</option>
@@ -168,22 +168,22 @@
 
             <div class="input-group">
                 <label class="form-label">Numero da Os</label>
-                <input class="form-control" type="text" name="itens[3].numeroOs">
+                <input class="form-control" type="text" th:field="*{itens[3].numeroOs}">
             </div>
 
             <div class="input-group">
                 <label class="form-label">Descrição da tarefa</label>
-                <input class="form-control" type="text" name="itens[3].descricao">
+                <input class="form-control" type="text" th:field="*{itens[3].descricao}">
             </div>
 
             <div class="input-group">
                 <label class="form-label">inicio da tarefa</label>
-                <input class="form-control" type="time" name="itens[3].horarioInicio">
+                <input class="form-control" type="time" th:field="*{itens[3].horarioInicio}">
             </div>
 
             <div class="input-group">
                 <label class="form-label">fim da tarefa</label>
-                <input class="form-control" type="time" name="itens[3].horarioFim">
+                <input class="form-control" type="time" th:field="*{itens[3].horarioFim}">
             </div>
 
             <button class="lineButtonAdd" type="button" onclick="adicionarHora()">adicionar</button>
