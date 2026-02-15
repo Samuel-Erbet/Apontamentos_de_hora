@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apontamentos</title>
-    <script th:src="@{/js/script.js}"></script>
+    <script th:src="@{/js/script.js}" defer></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
@@ -21,26 +21,31 @@
             <div class="fields">
                 <label class="form-label">nome:</label>
                 <input class="form-control-input readonly-field" type="text" th:value="*{funcionario.nome}" readonly>
+                <span class="error-msg" style="color: red; font-size: 0.8rem;"></span>
             </div>
 
             <div class="fields">
                 <label class="form-label">matrícula:</label>
                 <input class="form-control-input readonly-field" type="text" th:value="*{funcionario.matricula}" readonly>
+                <span class="error-msg" style="color: red; font-size: 0.8rem;"></span>
             </div>
 
             <div class="fields">
                 <label class="form-label">turno:</label>
                 <input class="form-control-input readonly-field" type="text" th:value="*{funcionario.turno}" readonly>
+                <span class="error-msg" style="color: red; font-size: 0.8rem;"></span>
             </div>
 
             <div class="fields">
                 <label class="form-label">unidade:</label>
                 <input class="form-control-input" type="text" th:field="*{itens[0].unidade}">
+                <span class="error-msg" style="color: red; font-size: 0.8rem;"></span>
             </div>
 
             <div class="fields">
                 <label class="form-label">data:</label>
                 <input class="form-control-input" type="date" th:field="*{itens[0].data}">
+                <span class="error-msg" style="color: red; font-size: 0.8rem;"></span>
             </div>
 
     </div>
@@ -56,26 +61,31 @@
                     <option value="4">4 - Férias</option>
                     <option value="1b">1b - Atividade Rentável</option>
                 </select>
+                <span class="error-msg" style="color: red; font-size: 0.7rem;"></span>
             </div>
 
             <div class="input-group">
                 <label class="form-label">Numero da Os</label>
                 <input class="form-control" type="text" th:field="*{itens[0].numeroOs}">
+                <span class="error-msg" style="color: red; font-size: 0.7rem; display: block;"></span>
             </div>
 
             <div class="input-group">
                 <label class="form-label">Descrição da tarefa</label>
                 <input class="form-control" type="text" th:field="*{itens[0].descricao}">
+                <span class="error-msg" style="color: red; font-size: 0.7rem; display: block;"></span>
             </div>
 
             <div class="input-group">
                 <label class="form-label">inicio da tarefa</label>
                 <input class="form-control" type="time" th:field="*{itens[0].horarioInicio}">
+                <span class="error-msg" style="color: red; font-size: 0.7rem; display: block;"></span>
             </div>
 
             <div class="input-group">
                 <label class="form-label">fim da tarefa</label>
                 <input class="form-control" type="time" th:field="*{itens[0].horarioFim}">
+                <span class="error-msg" style="color: red; font-size: 0.7rem; display: block;"></span>
             </div>
 
             <button class="lineButtonAdd" type="button" onclick="adicionarHora()">adicionar</button>
@@ -92,26 +102,31 @@
                     <option value="4">4 - Férias</option>
                     <option value="1b">1b - Atividade Rentável</option>
                 </select>
+                <span class="error-msg" style="color: red; font-size: 0.7rem;"></span>
             </div>
 
             <div class="input-group">
                 <label class="form-label">Numero da Os</label>
                 <input class="form-control" type="text" th:field="*{itens[1].numeroOs}">
+                <span class="error-msg" style="color: red; font-size: 0.7rem; display: block;"></span>
             </div>
 
             <div class="input-group">
                 <label class="form-label">Descrição da tarefa</label>
                 <input class="form-control" type="text" th:field="*{itens[1].descricao}">
+                <span class="error-msg" style="color: red; font-size: 0.7rem; display: block;"></span>
             </div>
 
             <div class="input-group">
                 <label class="form-label">inicio da tarefa</label>
                 <input class="form-control" type="time" th:field="*{itens[1].horarioInicio}">
+                <span class="error-msg" style="color: red; font-size: 0.7rem; display: block;"></span>
             </div>
 
             <div class="input-group">
                 <label class="form-label">fim da tarefa</label>
                 <input class="form-control" type="time" th:field="*{itens[1].horarioFim}">
+                <span class="error-msg" style="color: red; font-size: 0.7rem; display: block;"></span>
             </div>
 
             <button class="lineButtonAdd" type="button" onclick="adicionarHora()">adicionar</button>
@@ -128,26 +143,31 @@
                     <option value="4">4 - Férias</option>
                     <option value="1b">1b - Atividade Rentável</option>
                 </select>
+                <span class="error-msg" style="color: red; font-size: 0.7rem;"></span>
             </div>
 
             <div class="input-group">
                 <label class="form-label">Numero da Os</label>
                 <input class="form-control" type="text" th:field="*{itens[2].numeroOs}">
+                <span class="error-msg" style="color: red; font-size: 0.7rem; display: block;"></span>
             </div>
 
             <div class="input-group">
                 <label class="form-label">Descrição da tarefa</label>
                 <input class="form-control" type="text" th:field="*{itens[2].descricao}">
+                <span class="error-msg" style="color: red; font-size: 0.7rem; display: block;"></span>
             </div>
 
             <div class="input-group">
                 <label class="form-label">inicio da tarefa</label>
                 <input class="form-control" type="time" th:field="*{itens[2].horarioInicio}">
+                <span class="error-msg" style="color: red; font-size: 0.7rem; display: block;"></span>
             </div>
 
             <div class="input-group">
                 <label class="form-label">fim da tarefa</label>
                 <input class="form-control" type="time" th:field="*{itens[2].horarioFim}">
+                <span class="error-msg" style="color: red; font-size: 0.7rem; display: block;"></span>
             </div>
 
             <button class="lineButtonAdd" type="button" onclick="adicionarHora()">adicionar</button>
@@ -164,26 +184,31 @@
                     <option value="4">4 - Férias</option>
                     <option value="1b">1b - Atividade Rentável</option>
                 </select>
+                <span class="error-msg" style="color: red; font-size: 0.7rem;"></span>
             </div>
 
             <div class="input-group">
                 <label class="form-label">Numero da Os</label>
                 <input class="form-control" type="text" th:field="*{itens[3].numeroOs}">
+                <span class="error-msg" style="color: red; font-size: 0.7rem; display: block;"></span>
             </div>
 
             <div class="input-group">
                 <label class="form-label">Descrição da tarefa</label>
                 <input class="form-control" type="text" th:field="*{itens[3].descricao}">
+                <span class="error-msg" style="color: red; font-size: 0.7rem; display: block;"></span>
             </div>
 
             <div class="input-group">
                 <label class="form-label">inicio da tarefa</label>
                 <input class="form-control" type="time" th:field="*{itens[3].horarioInicio}">
+                <span class="error-msg" style="color: red; font-size: 0.7rem; display: block;"></span>
             </div>
 
             <div class="input-group">
                 <label class="form-label">fim da tarefa</label>
                 <input class="form-control" type="time" th:field="*{itens[3].horarioFim}">
+                <span class="error-msg" style="color: red; font-size: 0.7rem; display: block;"></span>
             </div>
 
             <button class="lineButtonAdd" type="button" onclick="adicionarHora()">adicionar</button>

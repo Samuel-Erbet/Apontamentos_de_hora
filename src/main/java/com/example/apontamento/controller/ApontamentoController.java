@@ -15,7 +15,10 @@ import java.util.List;
 @Controller
 public class ApontamentoController {
 
-    // preciso fazer um css
+    // PRECISO CORRIGIR O CSS DO SCRIPT.JS
+    // E PRECISO CORRIGIR A ROTA DO ARQUIVO SUCCESS.HTML
+    // DOCUMENTAR O CÓDIGO
+    // RETORNAR UMA MENSSAGEM DE ERRO FALANDO O QUE ESTÁ DE ERRADO PARA O USER SE ELE ESCREVER ALGO ERRADO
 
 
     @Autowired
