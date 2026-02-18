@@ -1,0 +1,32 @@
+.success-card {
+            background-color: rgb(243, 244, 245);
+            border-radius: 12px;
+            padding: 40px;
+            width: 95%;
+            max-width: 600px;
+            margin: 50px auto;
+            box-shadow: 0px 0px 10px 0px rgb(180, 180, 180);
+            text-align: center;
+        }
+
+        .success-icon {
+            font-size: 50px;
+            color: green;
+            margin-bottom: 20px;
+        }
+
+        .success-message {
+            color: #0f1670;
+            margin-bottom: 30px;
+        }
+
+        .back-button {
+            text-decoration: none;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .p{
+            margin-bottom: 25px; 
+            color: #555;
+        }

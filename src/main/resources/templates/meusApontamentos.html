@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Apontamentos</title>
+    <link rel="stylesheet" th:href="@{/css/meusApontamentos.css}">
+</head>
+<body>
+    <h1>Apontamentos</h1>
+
+    <div class="info">
+        <p class="infoUser">Nome do usuário: <strong th:text="${funcionario.nome}"></strong> </p>
+        <p class="infoUser">Turno: <strong th:text="${funcionario.turno}"> </strong> </p>
+        <p class="infoUser">Cargo: <strong th:text="${funcionario.cargo}"> </strong> </p>
+
+    </div>
+    
+
+    <div class="table">
+ 
+        <table class="apontamentos-table">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Cód. Parada</th>
+                    <th>numero OS</th>
+                    <th>Descrição do Trabalho</th>
+                    <th>Horário inicio</th>
+                    <th>Horário fim</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="ap : ${apontamentos}">
+                    <td th:text="${#temporals.format(ap.data, 'dd/MM/yyyy')}"></td>
+                    <td th:text="${ap.codigoParada}"></td>
+                    <td th:text="${ap.numeroOs}"></td>
+                    <td th:text="${ap.descricao}"></td>
+                    <td th:text="${ap.horarioInicio}"></td>
+                    <td th:text="${ap.horarioFim}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+</body>
+</html>
