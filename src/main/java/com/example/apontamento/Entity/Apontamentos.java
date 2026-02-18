@@ -39,7 +39,7 @@ public class Apontamentos {
     private String descricao;
 
     @UpdateTimestamp
-    private LocalTime ultimaAlteracao;
+    private LocalDate ultimaAlteracao;
 
 
     public Apontamentos() {};
@@ -116,11 +116,11 @@ public class Apontamentos {
         this.descricao = descricao;
     }
 
-    public LocalTime getUltimaAlteracao() {
+    public LocalDate getUltimaAlteracao() {
         return ultimaAlteracao;
     }
 
-    public void setUltimaAlteracao(LocalTime ultimaAlteracao) {
+    public void setUltimaAlteracao(LocalDate ultimaAlteracao) {
         this.ultimaAlteracao = ultimaAlteracao;
     }
 }

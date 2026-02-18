@@ -74,3 +74,9 @@ Pré requisitos de versão das tecnologias usadas.
 ```
 
 ## 
+
+## 6. Melhorias em desenvolvimento
+
+---
+
+* Implementar um metodo em que o supervisor seja capaz de ver os apontamentos de seus funcionários.
