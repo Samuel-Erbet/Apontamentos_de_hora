@@ -73,10 +73,61 @@ Pré requisitos de versão das tecnologias usadas.
     Spring-web:            7.0.2
 ```
 
-## 
+## 7. Análise de Dados e Relatórios
 
-## 6. Melhorias em desenvolvimento
+Para viabilizar a análise estratégica dos dados, a aplicação está conectada ao Railway, um provedor de nuvem que oferece
+excelente custo-benefício e estabilidade para operações deste porte. Embora o sistema utilize o Railway, a estrutura foi
+desenhada para ser compatível com qualquer outro grande provedor de nuvem.
 
----
+### Interface de Consulta no Excel
+A extração e filtragem das informações são feitas diretamente pelo Excel, utilizando uma tabela dinâmica chamada 
+"Filtros". Esta tabela funciona como o painel de controle do usuário, onde são inseridos três parâmetros essenciais:
 
-* Implementar um metodo em que o supervisor seja capaz de ver os apontamentos de seus funcionários.
+* Unidade: Define a sede ou localidade específica da empresa.
+
+* Data Início e Data Final: Delimitam o período exato para a análise dos apontamentos.
+
+O sistema é flexível, permitindo a inclusão futura de novos filtros, como número de matrícula ou categorias específicas,
+conforme a necessidade da operação.
+
+### Segurança e Acesso
+A conexão é estabelecida através da função "Obter Dados" do MySQL, utilizando o endereço do servidor e o banco de dados 
+hospedado. Por questões de segurança, o acesso é feito obrigatoriamente pelo usuário leitor_excel. Este usuário possui 
+permissões restritas apenas para leitura (consultas SQL), o que impede qualquer alteração ou exclusão acidental dos
+dados originais por parte do usuário final.
+
+### Automação do Filtro (Power Query)
+Para que o Excel "converse" com o banco de dados e entenda os filtros aplicados, utilizamos o código abaixo no Editor 
+Avançado. Ele é responsável por capturar o que foi digitado na tabela "Filtros", tratar as informações 
+(como converter textos para minúsculo para evitar erros de digitação) e buscar no servidor apenas os registros que 
+batem com os critérios:
+
+
+```
+    let
+
+    FiltroTabela = Excel.CurrentWorkbook(){[Name="Filtros"]}[Content],
+    LocalidadeAlvo = Text.Lower(Text.From(FiltroTabela{0}[localidade])),
+    DataInicio = Date.From(FiltroTabela{0}[data inicio]),
+    DataFim = Date.From(FiltroTabela{0}[data fim]),
+
+    Fonte = MySQL.Database("gondola.proxy.rlwy.net:39699", "railway", [ReturnSingleDatabase=true]),
+    TabelaBanco = Fonte{[Schema="railway", Item="apontamentos"]}[Data],
+
+    DadosFiltrados = Table.SelectRows(TabelaBanco, each 
+        (Text.Lower([unidade]) = LocalidadeAlvo) and 
+        (Date.From([data]) >= DataInicio) and 
+        (Date.From([data]) <= DataFim)
+    )
+    in
+        DadosFiltrados
+
+```
+
+
+
+### Resultado Final
+Após a configuração inicial, o processo de uso é imediato: o usuário altera os valores de unidade ou data na planilha e 
+clica em Atualizar. O sistema processa a requisição na nuvem e retorna o relatório filtrado instantaneamente, garantindo
+uma análise rápida, segura e sem burocracia técnica.
+
