@@ -11,6 +11,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
+// Essa classe serve para setar as condições de login, se for a primeira vez do user ele vai criar a senha dele através
+// do hash da matricula
+
 @Service
 public class CustomerDetailsService implements UserDetailsService {
 
@@ -23,12 +26,17 @@ public class CustomerDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String nomeDigitado) throws UsernameNotFoundException {
         Funcionario funcionario = funcionarioRepository.findByNome(nomeDigitado)
-                .orElseThrow(() -> new UsernameNotFoundException("Funcionário não encontrado: " + nomeDigitado));
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + nomeDigitado));
 
-        String senhaCriptografada =encoder.encode(funcionario.getMatricula().toString());
+        if (funcionario.getSenha() == null || funcionario.getSenha().isEmpty()) {
+            String hashMatricula = encoder.encode(funcionario.getMatricula().toString());
+            funcionario.setSenha(hashMatricula);
+            funcionarioRepository.saveAndFlush(funcionario);
+            System.out.println("Senha criada para: " + nomeDigitado);
+        }
 
-        return User.withUsername(funcionario.getNome())
-                .password(senhaCriptografada)
+        return User.withUsername(funcionario.getMatricula().toString())
+                .password(funcionario.getSenha())
                 .roles(funcionario.getAcesso())
                 .build();
     }

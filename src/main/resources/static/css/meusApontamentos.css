@@ -37,46 +37,48 @@ h1 {
     margin: 0 auto 40px auto;
     background-color: #fdfdfd;
     border-radius: 0 0 12px 12px;
-    overflow-x: auto; 
+    overflow: hidden;
     box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
 }
 
 .apontamentos-table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 700px;  
+    table-layout: auto;
 }
+
 .apontamentos-table th {
     background-color: #3819a7;
     color: white;
-    padding: 15px;
+    padding: 10px 5px;
     text-transform: uppercase;
-    font-size: 0.85rem;
+    font-size: 0.75rem;
 }
 
 .apontamentos-table td {
-    padding: 12px 15px;
+    padding: 8px 5px;
     border-bottom: 1px solid #eee;
     text-align: center;
     color: #333;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
+    white-space: nowrap;
 }
 
+@media (max-width: 1000px) {
+    .apontamentos-table {
+        transform: scale(0.9);
+        transform-origin: top left;
+        width: 111%;
+    }
+
+    .table {
+        overflow-x: auto;
+    }
+}
+
+.apontamentos-table tbody tr {
+    height: 35px;
+}
 .apontamentos-table tbody tr:hover {
     background-color: #f1f1ff;
-}
-
-@media (max-width: 600px) {
-    h1 {
-        font-size: 1.5rem;
-        margin: 20px 0;
-    }
-
-    .info {
-        padding: 15px;
-    }
-
-    .infoUser {
-        font-size: 0.9rem;
-    }
 }

@@ -2,28 +2,36 @@ package com.example.apontamento.controller;
 
 import com.example.apontamento.Entity.Apontamentos;
 import com.example.apontamento.Entity.ApontamentosForm;
+import com.example.apontamento.Entity.Funcionario;
 import com.example.apontamento.repository.ApontamentoRepository;
+import com.example.apontamento.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Controller
 public class ApontamentoController {
-
-    // PRECISO CORRIGIR O CSS DO SCRIPT.JS
-    // E PRECISO CORRIGIR A ROTA DO ARQUIVO SUCCESS.HTML
-    // DOCUMENTAR O CÓDIGO
-    // RETORNAR UMA MENSSAGEM DE ERRO FALANDO O QUE ESTÁ DE ERRADO PARA O USER SE ELE ESCREVER ALGO ERRADO
-
-
+    /*
+        // DOCUMENTAR O CÓDIGO
+        // CRIAR UM SCRIPT QUE ENVIE UM EMAIL AO CHEFE SEMPRE QUE UM USUÁRIO ENVIAR UM APONTAMENTO
+        // PRECISO TESTAR SE A FUNÇÃO MANDAR EMAIL FUNCIONA
+        // PRECISO CRIAR UMA COLUNA QUE ASSOCIE UM GESTOR A SEU FUNCIONÁRIO
+        // CRIAR COLUNA EMAIL
+     */
     @Autowired
     private ApontamentoRepository repository;
 
+    @Autowired
+    private EmailService enviarEmail;
 
     @PostMapping("apontamentos/form/save")
     public String saveAPontamento(@ModelAttribute("apontamentos") ApontamentosForm list, Model model) {
@@ -47,7 +55,6 @@ public class ApontamentoController {
 
         double totalMinutos = 0;
 
-        // 3. Loop que valida campo por campo das tarefas iniciadas
         for (Apontamentos ap : itensParaSalvar) {
             ap.setUnidade(unidadeGlobal);
             ap.setData(dataGlobal);
@@ -73,10 +80,15 @@ public class ApontamentoController {
 
         if (totalMinutos < 480) {
             model.addAttribute("error", "A soma das horas deu " + totalMinutos + " min. Precisa de pelo menos 480 (8h)!");
+            model.addAttribute("apontamentos", list);
             return "index";
         }
 
         repository.saveAll(itensParaSalvar);
+        // lógica que pega o usuário do gestor e envia a menssagem pelo email dele
+
+        //enviarEmail.enviarEmailTexto(list.getItens().get(0),"${EMAIL_USER_RECEIVER}");
+
         return "redirect:/success";
     }
 
@@ -87,9 +99,36 @@ public class ApontamentoController {
     }
 
 
-    @GetMapping("/menu")
-    public String menu(){
-        return "menu";
-    }
+ /*
+    @GetMapping("/disparar-email-teste")
+    @ResponseBody
+    public String dispararEmailTeste() {
+        try {
+            // Use o nome EXATO do metodo que você criou no seu EmailService
 
+            // 1. Criar e configurar o Funcionário (quem está fazendo o apontamento)
+            Funcionario func = new Funcionario();
+            func.setMatricula(12345L);
+            func.setNome("Samuel Erbet");
+
+// 2. Criar o objeto Apontamentos e preencher via Setters
+            Apontamentos testeApontamento = new Apontamentos();
+            testeApontamento.setFuncionario(func);
+            testeApontamento.setData(LocalDate.now());
+            testeApontamento.setCodigoParada("P-10");
+            testeApontamento.setNumeroOs("OS-9988");
+            testeApontamento.setHorarioInicio(LocalTime.of(8, 00));
+            testeApontamento.setHorarioFim(LocalTime.of(17, 00));
+            testeApontamento.setUnidade("Unidade Central");
+            testeApontamento.setDescricao("Teste de envio de e-mail automatizado");
+
+// 3. Chamar o serviço de e-mail (supondo que o destinatário venha da sua config)
+            String resultado = enviarEmail.enviarEmailTexto(testeApontamento, "samuelerbet@gmail.com");
+            System.out.println(resultado);
+            return resultado;
+        } catch (Exception e) {
+            return "<h1>❌ Erro no envio</h1><p>Detalhe: " + e.getMessage() + "</p>";
+        }
+    }
+*/
 }

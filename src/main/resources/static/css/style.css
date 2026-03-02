@@ -9,6 +9,33 @@ body {
     padding: 20px;
 }
 
+.input-group, .fields {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    flex: 1 1 200px;
+    position: relative; /* Importante para o posicionamento do erro */
+    padding-bottom: 18px; /* Cria um "espaço reserva" fixo para o erro não empurrar nada */
+}
+
+.error-msg {
+    color: #d93025; /* Um vermelho mais visível e profissional */
+    font-size: 0.75rem;
+    font-weight: 500;
+    position: absolute; /* Ela flutua sobre o padding que criamos */
+    bottom: 0; /* Alinha no final do padding reserva */
+    left: 2px;
+    height: 15px; /* Altura fixa */
+    white-space: nowrap; /* Evita que o erro quebre linha e deforme o bloco */
+    pointer-events: none; /* Garante que o texto não atrapalhe cliques */
+}
+
+.form-control, .form-control-input {
+    margin-top: 5px;
+    margin-bottom: 2px; /* Espaçamento controlado */
+}
+
+
 h1 {
     color: #0f1670;
     text-align: center;
@@ -105,7 +132,6 @@ h1 {
     flex: 1 1 200px;
 }
 
-/* Botões */
 .lineButtonAdd, .lineButtonRemove {
     border: none;
     border-radius: 6px;

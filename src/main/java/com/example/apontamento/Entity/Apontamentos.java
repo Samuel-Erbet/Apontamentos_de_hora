@@ -42,7 +42,7 @@ public class Apontamentos {
     private LocalDate ultimaAlteracao;
 
 
-    public Apontamentos() {};
+
 
     public long getId() {
         return id;

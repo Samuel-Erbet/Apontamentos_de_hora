@@ -8,8 +8,11 @@ import com.example.apontamento.repository.FuncionariosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
 
@@ -45,6 +48,19 @@ public class View {
         return mv;
     }
 
+    @GetMapping("/menu")
+    public String menu(Model model, Principal principal) {
+        // principal.getName() retorna a Matrícula que definimos no Security
+        String matriculaStr = principal.getName();
+
+        // Busca o funcionário para pegar o Nome Real
+            funcionariosRepository.findById(Long.parseLong(matriculaStr)).ifPresent(func -> {
+            model.addAttribute("nomeUsuario", func.getNome());
+            model.addAttribute("matricula", func.getMatricula());
+        });
+
+        return "menu"; // Nome do seu arquivo HTML
+    }
 
     @GetMapping("/apontamentos/meus-apontamentos")
     public ModelAndView meusApontamentos(Authentication authentication) {
@@ -55,7 +71,7 @@ public class View {
         String user = authentication.getName();
 
         Funcionario funcionario = funcionariosRepository.findByNome(user).orElse(null);
-        List<Apontamentos> lista = repository.findByFuncionarioNome(user);
+        List<Apontamentos> lista = repository.findTop60ByFuncionarioNomeOrderByDataDescHorarioInicioAsc(user);
 
         if (lista == null){
             lista = Collections.emptyList();

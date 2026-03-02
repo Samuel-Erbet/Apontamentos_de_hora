@@ -9,24 +9,32 @@ function adicionarHora() {
     novaLinha.innerHTML = `
         <div class="input-group">
             <label class="form-label">código de parada</label>
-            <select class="form-control-option" name="itens[${contador}].codigoParada">
-                <option value="" selected>Selecione...</option>
-                <option value="2">2 - Atestado</option>
-                <option value="1b">1b - Atividade Rentável</option>
-            </select>
+            <input class="form-control" type="text" name="itens[${contador}].codigoParada">
+            <span class="error-msg" style="color: red; font-size: 0.7rem;"></span>
+        </div>
+        <div class="input-group">
+            <label class="form-label">Numero da Os</label>
+            <input class="form-control" type="text" name="itens[${contador}].numeroOs">
+            <span class="error-msg" style="color: red; font-size: 0.7rem; display: block;"></span>
         </div>
         <div class="input-group">
             <label class="form-label">Descrição</label>
             <input class="form-control" type="text" name="itens[${contador}].descricao">
+            <span class="error-msg" style="color: red; font-size: 0.7rem; display: block;"></span>
         </div>
         <div class="input-group">
             <label class="form-label">Início</label>
             <input class="form-control" type="time" name="itens[${contador}].horarioInicio">
+            <span class="error-msg" style="color: red; font-size: 0.7rem; display: block;"></span>
         </div>
         <div class="input-group">
             <label class="form-label">Fim</label>
             <input class="form-control" type="time" name="itens[${contador}].horarioFim">
+            <span class="error-msg" style="color: red; font-size: 0.7rem; display: block;"></span>
         </div>
+
+        <button class="lineButtonAdd" type="button" onclick="adicionarHora()">adicionar</button>
+        <button class="lineButtonRemove" type="button" onclick="removerHora(this)">remover</button>
     `;
 
     container.appendChild(novaLinha);
@@ -48,15 +56,15 @@ function removerHora(botton) {
 
 
 function reordenarIndices() {
-    let container = document.getElementById("container-tasks");
-    let linhas = container.querySelectorAll(".line-tasks");
-
+    let linhas = document.querySelectorAll(".line-tasks");
     linhas.forEach((linha, index) => {
-        const inputs = linha.querySelectorAll("input");
-        inputs.forEach(input => {
-            let nameOriginal = input.getAttribute("name");
-            let novoName = nameOriginal.replace(/\[\d+\]/, `[${index}]`);
-            input.setAttribute("name", novoName);
+        const elementos = linha.querySelectorAll("input, select, textarea");
+        elementos.forEach(el => {
+            let nameOriginal = el.getAttribute("name");
+            if (nameOriginal) {
+                let novoName = nameOriginal.replace(/\[\d+\]/, `[${index}]`);
+                el.setAttribute("name", novoName);
+            }
         });
         linha.id = "linha-" + index;
     });
@@ -88,7 +96,7 @@ document.addEventListener("DOMContentLoaded", function() {
         let preencheuPeloMenosUm = false;
 
         linhas.forEach((linha) => {
-            const codigo = linha.querySelector("select");
+            const codigo = linha.querySelector("input[name*='.codigoParada']");
             const os = linha.querySelector("input[name*='.numeroOs']");
             const desc = linha.querySelector("input[name*='.descricao']");
             const inicio = linha.querySelector("input[name*='.horarioInicio']");
@@ -127,7 +135,13 @@ document.addEventListener("DOMContentLoaded", function() {
         if (temErro) {
             e.preventDefault();
             const primeiroErro = document.querySelector(".error-msg:not(:empty)");
-            if (primeiroErro) primeiroErro.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            if (primeiroErro) primeiroErro.scrollIntoView({ behavior: 'smooth', block: 'center'});
+        } else {
+
+        const btn = document.querySelector(".button");
+        btn.innerText = "Enviando...";
+        btn.style.opacity = "0.5";
+        btn.style.pointerEvents = "none";
         }
     };
 });

@@ -9,7 +9,6 @@ public class ApontamentosForm {
     private List<Apontamentos> itens = new ArrayList<>();
 
     public ApontamentosForm() {
-        this.itens.add(new Apontamentos());
     }
 
     public Funcionario getFuncionario() {
