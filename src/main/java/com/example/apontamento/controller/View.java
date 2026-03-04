@@ -32,7 +32,7 @@ public class View {
         ModelAndView mv = new ModelAndView("index");
 
         String nomeLogado = authentication.getName();
-        Funcionario funcionarioLogado = funcionariosRepository.findByNome(nomeLogado)
+        Funcionario funcionarioLogado = funcionariosRepository.findById(Long.parseLong(nomeLogado))
                 .orElseThrow(() -> new RuntimeException("Usuario não encontrado"));
 
         var apontamentosForm = new ApontamentosForm();
@@ -63,20 +63,23 @@ public class View {
     }
 
     @GetMapping("/apontamentos/meus-apontamentos")
-    public ModelAndView meusApontamentos(Authentication authentication) {
+    public ModelAndView meusApontamentos(Model model, Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()){
             return  new ModelAndView("redirect:/login");
         }
 
         String user = authentication.getName();
 
-        Funcionario funcionario = funcionariosRepository.findByNome(user).orElse(null);
-        List<Apontamentos> lista = repository.findTop60ByFuncionarioNomeOrderByDataDescHorarioInicioAsc(user);
+        Funcionario funcionario = funcionariosRepository.findById(Long.parseLong(user))
+                .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
+
+        List<Apontamentos> lista = repository.findTop60ByFuncionarioMatriculaOrderByDataDescHorarioInicioAsc(funcionario.getMatricula());
 
         if (lista == null){
             lista = Collections.emptyList();
         }
 
+        model.addAttribute("funcionario", funcionario);
         ModelAndView mv = new ModelAndView("meusApontamentos");
         mv.addObject("apontamentos", lista);
         mv.addObject("funcionario", funcionario);

@@ -6,6 +6,8 @@ import com.example.apontamento.Entity.Funcionario;
 import com.example.apontamento.repository.ApontamentoRepository;
 import com.example.apontamento.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,16 +24,20 @@ import java.util.List;
 public class ApontamentoController {
     /*
         // DOCUMENTAR O CÓDIGO
-        // CRIAR UM SCRIPT QUE ENVIE UM EMAIL AO CHEFE SEMPRE QUE UM USUÁRIO ENVIAR UM APONTAMENTO
-        // PRECISO TESTAR SE A FUNÇÃO MANDAR EMAIL FUNCIONA
-        // PRECISO CRIAR UMA COLUNA QUE ASSOCIE UM GESTOR A SEU FUNCIONÁRIO
-        // CRIAR COLUNA EMAIL
+        // CRIAR EXCEÇÕES
+        // ALTERAR A SENHA DO BANCO DE DADOS NO .ENV
+        // OLHAR A MIGRATION NO JPA
+        // IMPLEMENTAR O FLYWAY
+        INTERESSANTE
+            * MEDIR O DESEMPENHO DA APLICAÇÃO
      */
     @Autowired
     private ApontamentoRepository repository;
 
     @Autowired
     private EmailService enviarEmail;
+
+    @Value("${EMAIL_USER_RECEIVER}") String remetente;
 
     @PostMapping("apontamentos/form/save")
     public String saveAPontamento(@ModelAttribute("apontamentos") ApontamentosForm list, Model model) {
@@ -86,8 +92,7 @@ public class ApontamentoController {
 
         repository.saveAll(itensParaSalvar);
         // lógica que pega o usuário do gestor e envia a menssagem pelo email dele
-
-        //enviarEmail.enviarEmailTexto(list.getItens().get(0),"${EMAIL_USER_RECEIVER}");
+        enviarEmail.enviarEmailTexto(list,remetente);
 
         return "redirect:/success";
     }
@@ -99,36 +104,6 @@ public class ApontamentoController {
     }
 
 
- /*
-    @GetMapping("/disparar-email-teste")
-    @ResponseBody
-    public String dispararEmailTeste() {
-        try {
-            // Use o nome EXATO do metodo que você criou no seu EmailService
 
-            // 1. Criar e configurar o Funcionário (quem está fazendo o apontamento)
-            Funcionario func = new Funcionario();
-            func.setMatricula(12345L);
-            func.setNome("Samuel Erbet");
 
-// 2. Criar o objeto Apontamentos e preencher via Setters
-            Apontamentos testeApontamento = new Apontamentos();
-            testeApontamento.setFuncionario(func);
-            testeApontamento.setData(LocalDate.now());
-            testeApontamento.setCodigoParada("P-10");
-            testeApontamento.setNumeroOs("OS-9988");
-            testeApontamento.setHorarioInicio(LocalTime.of(8, 00));
-            testeApontamento.setHorarioFim(LocalTime.of(17, 00));
-            testeApontamento.setUnidade("Unidade Central");
-            testeApontamento.setDescricao("Teste de envio de e-mail automatizado");
-
-// 3. Chamar o serviço de e-mail (supondo que o destinatário venha da sua config)
-            String resultado = enviarEmail.enviarEmailTexto(testeApontamento, "samuelerbet@gmail.com");
-            System.out.println(resultado);
-            return resultado;
-        } catch (Exception e) {
-            return "<h1>❌ Erro no envio</h1><p>Detalhe: " + e.getMessage() + "</p>";
-        }
-    }
-*/
 }

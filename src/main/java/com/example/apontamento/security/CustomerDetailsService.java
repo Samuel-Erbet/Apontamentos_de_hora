@@ -9,10 +9,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-
-// Essa classe serve para setar as condições de login, se for a primeira vez do user ele vai criar a senha dele através
-// do hash da matricula
 
 @Service
 public class CustomerDetailsService implements UserDetailsService {
@@ -24,15 +22,25 @@ public class CustomerDetailsService implements UserDetailsService {
     private PasswordEncoder encoder;
 
     @Override
-    public UserDetails loadUserByUsername(String nomeDigitado) throws UsernameNotFoundException {
-        Funcionario funcionario = funcionarioRepository.findByNome(nomeDigitado)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + nomeDigitado));
+    @Transactional
+    public UserDetails loadUserByUsername(String loginDigitado) throws UsernameNotFoundException {
+
+        Funcionario funcionario = funcionarioRepository.findByNome(loginDigitado)
+                .or(() -> {
+                    try {
+                        return funcionarioRepository.findById(Long.parseLong(loginDigitado));
+                    } catch (NumberFormatException e) {
+                        return java.util.Optional.empty();
+                    }
+                })
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + loginDigitado));
 
         if (funcionario.getSenha() == null || funcionario.getSenha().isEmpty()) {
             String hashMatricula = encoder.encode(funcionario.getMatricula().toString());
             funcionario.setSenha(hashMatricula);
+
             funcionarioRepository.saveAndFlush(funcionario);
-            System.out.println("Senha criada para: " + nomeDigitado);
+            System.out.println( "Senha  gerada para matrícula: " + funcionario.getMatricula());
         }
 
         return User.withUsername(funcionario.getMatricula().toString())

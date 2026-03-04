@@ -7,13 +7,31 @@ public class Funcionario {
     @Id
     private Long matricula;
 
+    @Column(nullable = false)
     private String nome;
+
+    @Column(nullable = false)
     private String cargo;
+
+    @Column(nullable = false)
     private String cidade;
+
+    @Column(nullable = false)
     private String estado;
+
+    @Column(nullable = false)
     private String turno;
+
+    @Column(nullable = false)
     private String acesso;
+
     private String senha;
+
+    @Column(nullable = false)
+    private String email;
+
+    @ManyToOne(cascade = CascadeType.MERGE)
+    private Funcionario gestor;
 
     public Funcionario(){}
 
@@ -80,6 +98,23 @@ public class Funcionario {
     public void setTurno(String turno) {
         this.turno = turno;
     }
+
+    public Funcionario getGestor() {
+        return gestor;
+    }
+
+    public void setGestor(Funcionario gestor) {
+        this.gestor = gestor;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
 
 
 }

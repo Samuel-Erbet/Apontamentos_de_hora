@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface ApontamentoRepository extends JpaRepository<Apontamentos,Long> {
     // filtra os primeiros 60 apontamentos baseado no nome e ordenando por data em forma decrescente e horario de forma crescente
-    List<Apontamentos> findTop60ByFuncionarioNomeOrderByDataDescHorarioInicioAsc(String nome);
+    List<Apontamentos> findTop60ByFuncionarioMatriculaOrderByDataDescHorarioInicioAsc(Long matricula);
 }
