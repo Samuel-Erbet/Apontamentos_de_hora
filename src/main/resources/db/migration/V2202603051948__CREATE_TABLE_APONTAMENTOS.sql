@@ -1,5 +1,5 @@
 
-CREATE TABLE `apontamentos` (
+CREATE TABLE if not exists `apontamentos` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `codigo_parada` varchar(255) DEFAULT NULL,
   `data` date DEFAULT NULL,
