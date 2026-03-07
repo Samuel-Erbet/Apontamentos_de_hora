@@ -1,5 +1,5 @@
 let contador = 4;
-
+// essa função adiciona uma linha de tarefa a mais
 function adicionarHora() {
     const container = document.getElementById('container-tasks');
     const novaLinha = document.createElement('div');
@@ -41,7 +41,7 @@ function adicionarHora() {
     contador++;
 }
 
-
+// remove a linha de tarefa que você clicou
 function removerHora(botton) {
     let linha = botton.closest(".line-tasks");
     let container = document.getElementById("container-tasks");
@@ -54,7 +54,8 @@ function removerHora(botton) {
     }
 }
 
-
+// reorganiza o numero de linhas de tarefa baseado no seu indice
+// sem ele daria erro, porque o spring passa os objetos através de um indice, se estivesse fora de ordem causaria um erro
 function reordenarIndices() {
     let linhas = document.querySelectorAll(".line-tasks");
     linhas.forEach((linha, index) => {
@@ -71,7 +72,7 @@ function reordenarIndices() {
     contador = linhas.length;
 }
 
-
+// não vai permitir que o usuário envie o formulário se ele não passar nas condicionais
 document.addEventListener("DOMContentLoaded", function() {
     const form = document.getElementById("form");
 
@@ -127,21 +128,26 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
 
+        // o user não pode ter menos que 4 linhas de tarefa
         if (!preencheuPeloMenosUm) {
             alert("Preencha pelo menos uma tarefa completa.");
             temErro = true;
         }
 
+        // se ele não passar nas validações o user não conseguirá enviar o formulário
         if (temErro) {
             e.preventDefault();
             const primeiroErro = document.querySelector(".error-msg:not(:empty)");
             if (primeiroErro) primeiroErro.scrollIntoView({ behavior: 'smooth', block: 'center'});
         } else {
 
+        // se for valido o formulário ele n vai poder clicar no botão de enviar de novo, para evitar enviar os
+        // mesmos valores de novo
         const btn = document.querySelector(".button");
         btn.innerText = "Enviando...";
         btn.style.opacity = "0.5";
-        btn.style.pointerEvents = "none";
+        btn.disabled = true;
         }
     };
+
 });

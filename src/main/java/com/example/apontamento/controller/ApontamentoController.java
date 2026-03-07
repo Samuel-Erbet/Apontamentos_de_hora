@@ -25,11 +25,10 @@ public class ApontamentoController {
     /*
         // DOCUMENTAR O CÓDIGO
         // CRIAR EXCEÇÕES
-        // ALTERAR A SENHA DO BANCO DE DADOS NO .ENV
-        // OLHAR A MIGRATION NO JPA
-        // IMPLEMENTAR O FLYWAY
-        INTERESSANTE
+
+            INTERESSANTE
             * MEDIR O DESEMPENHO DA APLICAÇÃO
+
      */
     @Autowired
     private ApontamentoRepository repository;

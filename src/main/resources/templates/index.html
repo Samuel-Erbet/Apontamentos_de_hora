@@ -8,7 +8,7 @@
 </head>
 <body>
 
-<form id="form" th:action="@{/apontamentos/form/save}" th:object="${apontamentos}" method="post">
+<form id="form" th:action="@{/apontamentos/form/save}" th:object="${apontamentos}" method="post" autocomplete="off">
 
     <h1 id="title">Apontamentos</h1>
     <div class="questions">
@@ -82,8 +82,12 @@
                 <span class="error-msg" style="color: red; font-size: 0.7rem; display: block;"></span>
             </div>
 
-            <button class="lineButtonAdd" type="button" onclick="adicionarHora()">adicionar</button>
-            <button class="lineButtonRemove" type="button" onclick="removerHora(this)">remover</button>
+            <div class="container-buttons">
+                <button class="lineButtonAdd" type="button" onclick="adicionarHora()">adicionar</button>
+                <button class="lineButtonRemove" type="button" onclick="removerHora(this)">remover</button>
+            </div>
+            <div class="container-buttons">
+            </div>
         </div>
 
         <div class="line-tasks" id="linha-1">
@@ -117,8 +121,12 @@
                 <span class="error-msg" style="color: red; font-size: 0.7rem; display: block;"></span>
             </div>
 
-            <button class="lineButtonAdd" type="button" onclick="adicionarHora()">adicionar</button>
-            <button class="lineButtonRemove" type="button" onclick="removerHora(this)">remover</button>
+            <div class="container-buttons">
+                <button class="lineButtonAdd" type="button" onclick="adicionarHora()">adicionar</button>
+                <button class="lineButtonRemove" type="button" onclick="removerHora(this)">remover</button>
+            </div>
+
+
         </div>
 
         <div class="line-tasks" id="linha-2">
@@ -152,8 +160,11 @@
                 <span class="error-msg" style="color: red; font-size: 0.7rem; display: block;"></span>
             </div>
 
-            <button class="lineButtonAdd" type="button" onclick="adicionarHora()">adicionar</button>
-            <button class="lineButtonRemove" type="button" onclick="removerHora(this)">remover</button>
+
+            <div class="container-buttons">
+                <button class="lineButtonAdd" type="button" onclick="adicionarHora()">adicionar</button>
+                <button class="lineButtonRemove" type="button" onclick="removerHora(this)">remover</button>
+            </div>
         </div>
 
         <div class="line-tasks" id="linha-3">
@@ -187,8 +198,11 @@
                 <span class="error-msg" style="color: red; font-size: 0.7rem; display: block;"></span>
             </div>
 
-            <button class="lineButtonAdd" type="button" onclick="adicionarHora()">adicionar</button>
-            <button class="lineButtonRemove" type="button" onclick="removerHora(this)">remover</button>
+
+            <div class="container-buttons">
+                <button class="lineButtonAdd" type="button" onclick="adicionarHora()">adicionar</button>
+                <button class="lineButtonRemove" type="button" onclick="removerHora(this)">remover</button>
+            </div>
         </div>
     </div>
     <button class="button" type="submit">Enviar apontamento</button>
