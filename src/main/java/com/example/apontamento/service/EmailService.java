@@ -21,7 +21,7 @@ public class EmailService {
     private String remetente;
 
     // Metodo que vai disparar o email toda vez que alguém fazer apontamento
-    public String enviarEmailTexto(ApontamentosForm apontamento, String destinatario){
+    public void enviarEmailTexto(ApontamentosForm apontamento, String destinatario){
         MimeMessage mimeMessage = enviarEmail.createMimeMessage();
 
         try{
@@ -65,10 +65,8 @@ public class EmailService {
             helper.setText(html.toString(), true);
 
             enviarEmail.send(mimeMessage);
-            return "Email enviado com sucesso!";
         } catch (Exception e) {
             e.printStackTrace();
-            return "erro ao tentar enviar email";
         }
 
     }
