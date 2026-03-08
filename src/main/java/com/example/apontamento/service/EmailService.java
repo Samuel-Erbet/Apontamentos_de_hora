@@ -1,73 +1,102 @@
 package com.example.apontamento.service;
 
+import brevo.ApiClient;
+import com.example.apontamento.Entity.Apontamentos;
 import com.example.apontamento.Entity.ApontamentosForm;
-import jakarta.mail.internet.MimeMessage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 // Essa classe vai ser responsável por disparar um email toda vez que um apontamento for feito
 @Service
-@Async
 public class EmailService {
-    @Autowired
-    private JavaMailSender enviarEmail;
 
-    @Value("${spring.mail.username}")
-    private String remetente;
+    @Value("${BREVO_API_KEY}")
+    private String apiKey;
 
-    // Metodo que vai disparar o email toda vez que alguém fazer apontamento
-    public void enviarEmailTexto(ApontamentosForm apontamento, String destinatario){
-        MimeMessage mimeMessage = enviarEmail.createMimeMessage();
+    @Async
+    public void enviarEmail(ApontamentosForm form, String emailGestor) {
+        String url = "https://api.brevo.com/v3/smtp/email";
+        RestTemplate restTemplate = new RestTemplate();
 
-        try{
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("api-key", apiKey);
 
-            String nomeFuncionario = apontamento.getFuncionario().getNome();
-            String dataApontamento = apontamento.getItens().get(0).getData().toString();
+        String nomeFuncionario = form.getFuncionario().getNome();
+        String dataTitulo = form.getItens().isEmpty() ? "N/A" : form.getItens().get(0).getData().toString();
 
-            helper.setFrom(remetente);
-            helper.setTo(destinatario);
-            helper.setSubject("Apontamento: " + nomeFuncionario + " - " + dataApontamento);
-
-            StringBuilder html = new StringBuilder();
-            html.append("<h2 style='color: #217346;'>Relatório de Apontamento</h2>");
-            html.append("<p><b>Funcionário:</b> ").append(nomeFuncionario).append("</p>");
-
-            html.append("<table border='1' style='border-collapse: collapse; width: 100%; font-family: Calibri, Arial, sans-serif;'>");
-            html.append("<tr style='background-color: #217346; color: white; text-align: center;'>");
-            html.append("<th style='padding: 10px;'>Data</th>");
-            html.append("<th style='padding: 10px;'>Cód. Parada</th>");
-            html.append("<th style='padding: 10px;'>Número OS</th>");
-            html.append("<th style='padding: 10px;'>Descrição do Trabalho</th>");
-            html.append("<th style='padding: 10px;'>Horário Início</th>");
-            html.append("<th style='padding: 10px;'>Horário Fim</th>");
-            html.append("</tr>");
-
-            for (var item : apontamento.getItens()) {
-                html.append("<tr style='text-align: center;'>");
-                html.append("<td style='padding: 8px;'>").append(item.getData()).append("</td>");
-                html.append("<td style='padding: 8px;'>").append(item.getCodigoParada()).append("</td>");
-                html.append("<td style='padding: 8px;'>").append(item.getNumeroOs()).append("</td>");
-                html.append("<td style='padding: 8px; text-align: left;'>").append(item.getDescricao()).append("</td>");
-                html.append("<td style='padding: 8px;'>").append(item.getHorarioInicio()).append("</td>");
-                html.append("<td style='padding: 8px;'>").append(item.getHorarioFim()).append("</td>");
-                html.append("</tr>");
-            }
-
-            html.append("</table>");
-            html.append("<p style='font-size: 12px; color: #666;'>Gerado pelo Sistema de Apontamentos KRCB</p>");
-
-            helper.setText(html.toString(), true);
-
-            enviarEmail.send(mimeMessage);
-        } catch (Exception e) {
-            e.printStackTrace();
+        // Montando as linhas da tabela (os "registros" da planilha)
+        StringBuilder linhasTabela = new StringBuilder();
+        for (Apontamentos item : form.getItens()) {
+            linhasTabela.append(String.format("""
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 8px;">%s</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">%s</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">%s</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">%s</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">%s</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">%s</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">%s</td>
+                </tr>
+                """,
+                    form.getFuncionario().getMatricula(),
+                    item.getData(),
+                    item.getCodigoParada(),
+                    item.getNumeroOs(),
+                    item.getDescricao(),
+                    item.getHorarioInicio(),
+                    item.getHorarioFim()
+            ));
         }
 
+        // Estrutura da Tabela (Cabeçalho igual ao da sua imagem)
+        String corpoHtml = """
+                <html>
+                <body style="font-family: Arial, sans-serif;">
+                    <h2 style="color: #333;">Relatório de Apontamentos - %s</h2>
+                    <table style="width: 100%%; border-collapse: collapse; font-size: 12px;">
+                        <thead>
+                            <tr style="background-color: #f2f2f2; text-align: left;">
+                                <th style="border: 1px solid #ddd; padding: 8px;">Matrícula</th>
+                                <th style="border: 1px solid #ddd; padding: 8px;">Data</th>
+                                <th style="border: 1px solid #ddd; padding: 8px;">Cód. Parada</th>
+                                <th style="border: 1px solid #ddd; padding: 8px;">Nº OS</th>
+                                <th style="border: 1px solid #ddd; padding: 8px;">Descrição</th>
+                                <th style="border: 1px solid #ddd; padding: 8px;">Início</th>
+                                <th style="border: 1px solid #ddd; padding: 8px;">Fim</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            %s
+                        </tbody>
+                    </table>
+                    <br>
+                    <p style="color: #666; font-size: 11px;">Gerado automaticamente pelo Sistema de Apontamentos.</p>
+                </body>
+                </html>
+                """.formatted(nomeFuncionario, linhasTabela.toString());
+
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("sender", Map.of("name", "Sistema KRCB", "email", "apontamentoskrcb@gmail.com"));
+        payload.put("to", List.of(Map.of("email", emailGestor)));
+        payload.put("subject", "Apontamento: " + nomeFuncionario + " | " + dataTitulo);
+        payload.put("htmlContent", corpoHtml);
+
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(payload, headers);
+
+        try {
+            restTemplate.postForEntity(url, entity, String.class);
+            System.out.println("Planilha enviada para: " + emailGestor);
+        } catch (Exception e) {
+            System.err.println("Erro ao enviar planilha: " + e.getMessage());
+        }
     }
 }
