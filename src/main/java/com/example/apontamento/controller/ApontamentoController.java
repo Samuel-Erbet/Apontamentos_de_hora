@@ -86,7 +86,11 @@ public class ApontamentoController {
 
         repository.saveAll(itensParaSalvar);
         // lógica que pega o usuário do gestor e envia a menssagem pelo email dele
-        enviarEmail.enviarEmailTexto(list, destinatario);
+        try {
+            enviarEmail.enviarEmailTexto(list, destinatario);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return "redirect:/success";
     }
