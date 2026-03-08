@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 // Essa classe vai ser responsável por disparar um email toda vez que um apontamento for feito
 @Service
+@Async
 public class EmailService {
     @Autowired
     private JavaMailSender enviarEmail;

@@ -2,22 +2,17 @@ package com.example.apontamento.controller;
 
 import com.example.apontamento.Entity.Apontamentos;
 import com.example.apontamento.Entity.ApontamentosForm;
-import com.example.apontamento.Entity.Funcionario;
 import com.example.apontamento.repository.ApontamentoRepository;
 import com.example.apontamento.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 @Controller
@@ -25,7 +20,7 @@ public class ApontamentoController {
     /*
         // DOCUMENTAR O CÓDIGO
         // CRIAR EXCEÇÕES
-
+        // MEXER NO FILTRO DO FUNCIONÁRIO REPOSITORY E ADICIONAR A BUSCAR POR ID, ASSIM A ORDEM SERÁ MANTIDA IGUAL.
             INTERESSANTE
             * MEDIR O DESEMPENHO DA APLICAÇÃO
 
@@ -36,7 +31,7 @@ public class ApontamentoController {
     @Autowired
     private EmailService enviarEmail;
 
-    @Value("${EMAIL_USER_RECEIVER}") String remetente;
+    @Value("${EMAIL_USER_RECEIVER}") String destinatario;
 
     @PostMapping("apontamentos/form/save")
     public String saveAPontamento(@ModelAttribute("apontamentos") ApontamentosForm list, Model model) {
@@ -45,7 +40,7 @@ public class ApontamentoController {
         var dataGlobal = list.getItens().get(0).getData();
 
         if (unidadeGlobal == null || unidadeGlobal.isBlank() || dataGlobal == null) {
-            model.addAttribute("error", "Ô fera, preencha a UNIDADE e a DATA lá no topo!");
+            model.addAttribute("error", "preencha a UNIDADE e a DATA ");
             return "index";
         }
 
@@ -54,7 +49,7 @@ public class ApontamentoController {
                 .toList();
 
         if (itensParaSalvar.isEmpty()) {
-            model.addAttribute("error", "Preencha pelo menos UMA tarefa na lista abaixo.");
+            model.addAttribute("error", "Preencha pelo menos 4 tarefas na lista abaixo.");
             return "index";
         }
 
@@ -66,17 +61,17 @@ public class ApontamentoController {
             ap.setFuncionario(list.getFuncionario());
 
             if (ap.getDescricao() == null || ap.getDescricao().isBlank()) {
-                model.addAttribute("error", "Faltou a descrição em uma das tarefas!");
+                model.addAttribute("error", "Faltou a descrição em uma das tarefas");
                 return "index";
             }
 
             if (ap.getHorarioInicio() == null || ap.getHorarioFim() == null) {
-                model.addAttribute("error", "Preencha os horários de início e fim!");
+                model.addAttribute("error", "Preencha os horários de início e fim");
                 return "index";
             }
 
             if (ap.getHorarioInicio().isAfter(ap.getHorarioFim())) {
-                model.addAttribute("error", "Horário de início não pode ser maior que o fim, né?");
+                model.addAttribute("error", "Horário de início não pode ser maior que o fim");
                 return "index";
             }
 
@@ -84,14 +79,14 @@ public class ApontamentoController {
         }
 
         if (totalMinutos < 480) {
-            model.addAttribute("error", "A soma das horas deu " + totalMinutos + " min. Precisa de pelo menos 480 (8h)!");
+            model.addAttribute("error", "A soma das horas deu " + totalMinutos + " min. Precisa de pelo menos 480 (8h)");
             model.addAttribute("apontamentos", list);
             return "index";
         }
 
         repository.saveAll(itensParaSalvar);
         // lógica que pega o usuário do gestor e envia a menssagem pelo email dele
-        enviarEmail.enviarEmailTexto(list,remetente);
+        enviarEmail.enviarEmailTexto(list, destinatario);
 
         return "redirect:/success";
     }
