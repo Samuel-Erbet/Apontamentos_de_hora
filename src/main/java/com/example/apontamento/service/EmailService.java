@@ -33,7 +33,7 @@ public class EmailService {
         String nomeFuncionario = form.getFuncionario().getNome();
         String dataTitulo = form.getItens().isEmpty() ? "N/A" : form.getItens().get(0).getData().toString();
 
-        // Montando as linhas da tabela (os "registros" da planilha)
+        // Montando as linhas da tabela que o user preencheu
         StringBuilder linhasTabela = new StringBuilder();
         for (Apontamentos item : form.getItens()) {
             linhasTabela.append(String.format("""
@@ -57,7 +57,7 @@ public class EmailService {
             ));
         }
 
-        // Estrutura da Tabela (Cabeçalho igual ao da sua imagem)
+        // Estrutura da Tabela
         String corpoHtml = """
                 <html>
                 <body style="font-family: Arial, sans-serif;">

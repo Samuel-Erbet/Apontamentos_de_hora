@@ -20,6 +20,8 @@ public class ApontamentoController {
     /*
         // DOCUMENTAR O CÓDIGO
         // CRIAR EXCEÇÕES
+        // MEXER NA PARTE DO EMAIL DO FUNCIONÁRIO E TESTAR SE FUNCIONA
+        // ADICIONAR O FABIANO NO TESTE
         // MEXER NO FILTRO DO FUNCIONÁRIO REPOSITORY E ADICIONAR A BUSCAR POR ID, ASSIM A ORDEM SERÁ MANTIDA IGUAL.
             INTERESSANTE
             * MEDIR O DESEMPENHO DA APLICAÇÃO
@@ -87,7 +89,7 @@ public class ApontamentoController {
         repository.saveAll(itensParaSalvar);
         // lógica que pega o usuário do gestor e envia a menssagem pelo email dele
         try {
-            enviarEmail.enviarEmail(list, destinatario);
+            enviarEmail.enviarEmail(list, list.getFuncionario().getGestor().getEmail());
         } catch (Exception e) {
             e.printStackTrace();
         }

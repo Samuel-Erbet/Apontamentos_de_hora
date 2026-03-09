@@ -31,8 +31,8 @@ public class View {
 
         ModelAndView mv = new ModelAndView("index");
 
-        String nomeLogado = authentication.getName();
-        Funcionario funcionarioLogado = funcionariosRepository.findById(Long.parseLong(nomeLogado))
+        String email = authentication.getName();
+        Funcionario funcionarioLogado = funcionariosRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario não encontrado"));
 
         var apontamentosForm = new ApontamentosForm();
@@ -50,16 +50,16 @@ public class View {
 
     @GetMapping("/menu")
     public String menu(Model model, Principal principal) {
-        // principal.getName() retorna a Matrícula que definimos no Security
-        String matriculaStr = principal.getName();
+        // retorna o email definido no Security
+        String email = principal.getName();
 
-        // Busca o funcionário para pegar o Nome Real
-            funcionariosRepository.findById(Long.parseLong(matriculaStr)).ifPresent(func -> {
+        // Busca o funcionário para pegar o nome
+            funcionariosRepository.findByEmail(email).ifPresent(func -> {
             model.addAttribute("nomeUsuario", func.getNome());
             model.addAttribute("matricula", func.getMatricula());
         });
 
-        return "menu"; // Nome do seu arquivo HTML
+        return "menu";
     }
 
     @GetMapping("/apontamentos/meus-apontamentos")
@@ -68,12 +68,12 @@ public class View {
             return  new ModelAndView("redirect:/login");
         }
 
-        String user = authentication.getName();
+        String email = authentication.getName();
 
-        Funcionario funcionario = funcionariosRepository.findById(Long.parseLong(user))
+        Funcionario funcionario = funcionariosRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
 
-        List<Apontamentos> lista = repository.findTop60ByFuncionarioMatriculaOrderByDataDescHorarioInicioAsc(funcionario.getMatricula());
+        List<Apontamentos> lista = repository.findTop60ByFuncionarioMatriculaOrderByDataDescIdAsc(funcionario.getMatricula());
 
         if (lista == null){
             lista = Collections.emptyList();

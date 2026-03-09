@@ -23,27 +23,21 @@ public class CustomerDetailsService implements UserDetailsService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String loginDigitado) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String emailDigitado) throws UsernameNotFoundException {
 
-        Funcionario funcionario = funcionarioRepository.findByNome(loginDigitado)
-                .or(() -> {
-                    try {
-                        return funcionarioRepository.findById(Long.parseLong(loginDigitado));
-                    } catch (NumberFormatException e) {
-                        return java.util.Optional.empty();
-                    }
-                })
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + loginDigitado));
+        // Busca o funcionário pelo e-mail
+        Funcionario funcionario = funcionarioRepository.findByEmail(emailDigitado)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário com e-mail não encontrado: " + emailDigitado));
 
+        // gera uma senha caso ela não exista
         if (funcionario.getSenha() == null || funcionario.getSenha().isEmpty()) {
             String hashMatricula = encoder.encode(funcionario.getMatricula().toString());
             funcionario.setSenha(hashMatricula);
-
             funcionarioRepository.saveAndFlush(funcionario);
-            System.out.println( "Senha  gerada para matrícula: " + funcionario.getMatricula());
         }
 
-        return User.withUsername(funcionario.getMatricula().toString())
+        // Retorna o UserDetails. Note que mantemos a Matrícula ou o Email como "username" interno do Spring Security
+        return User.withUsername(funcionario.getEmail())
                 .password(funcionario.getSenha())
                 .roles(funcionario.getAcesso())
                 .build();
