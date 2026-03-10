@@ -2,10 +2,13 @@ package com.example.apontamento.controller;
 
 import com.example.apontamento.Entity.Apontamentos;
 import com.example.apontamento.Entity.ApontamentosForm;
+import com.example.apontamento.Entity.Funcionario;
 import com.example.apontamento.repository.ApontamentoRepository;
+import com.example.apontamento.repository.FuncionariosRepository;
 import com.example.apontamento.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,10 +36,18 @@ public class ApontamentoController {
     @Autowired
     private EmailService enviarEmail;
 
+    @Autowired
+    private FuncionariosRepository funcionarioRepository;
+
     @Value("${EMAIL_USER_RECEIVER}") String destinatario;
 
     @PostMapping("apontamentos/form/save")
-    public String saveAPontamento(@ModelAttribute("apontamentos") ApontamentosForm list, Model model) {
+    public String saveAPontamento(@ModelAttribute("apontamentos") ApontamentosForm list, Authentication authentication, Model model) {
+
+        String emailLogado = authentication.getName();
+
+        Funcionario funcionario = funcionarioRepository.findByEmail(emailLogado)
+                .orElseThrow(() -> new RuntimeException("erro ao buscar funcionário"));
 
         var unidadeGlobal = list.getItens().get(0).getUnidade();
         var dataGlobal = list.getItens().get(0).getData();
@@ -85,13 +96,25 @@ public class ApontamentoController {
             model.addAttribute("apontamentos", list);
             return "index";
         }
-
         repository.saveAll(itensParaSalvar);
+
         // lógica que pega o usuário do gestor e envia a menssagem pelo email dele
-        try {
-            enviarEmail.enviarEmail(list, list.getFuncionario().getGestor().getEmail());
-        } catch (Exception e) {
-            e.printStackTrace();
+
+        Funcionario gestor = funcionarioRepository.findByMatriculaWithGestor(funcionario.getMatricula())
+                .orElse(funcionario);
+
+
+        if(gestor.getGestor() != null){
+            String emailGestor = gestor.getGestor().getEmail();
+
+            if(emailGestor != null && emailGestor.contains("@")){
+                enviarEmail.enviarEmail(list, emailGestor);
+                System.out.println("email enviado "+ emailGestor);
+            } else {
+                System.err.println("o gestor possui email mas é invalido");
+            }
+        } else {
+            System.err.println("não possui gestor");
         }
 
         return "redirect:/success";

@@ -23,6 +23,12 @@ public class EmailService {
 
     @Async
     public void enviarEmail(ApontamentosForm form, String emailGestor) {
+
+        if (emailGestor == null || emailGestor.trim().isEmpty() || !emailGestor.contains("@")) {
+            System.err.println("O e-mail do gestor está inválido, Valor recebido: [" + emailGestor + "]");
+            return;
+        }
+
         String url = "https://api.brevo.com/v3/smtp/email";
         RestTemplate restTemplate = new RestTemplate();
 
@@ -94,7 +100,6 @@ public class EmailService {
 
         try {
             restTemplate.postForEntity(url, entity, String.class);
-            System.out.println("Planilha enviada para: " + emailGestor);
         } catch (Exception e) {
             System.err.println("Erro ao enviar planilha: " + e.getMessage());
         }
