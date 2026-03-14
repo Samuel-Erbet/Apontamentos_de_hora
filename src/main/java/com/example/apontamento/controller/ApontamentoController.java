@@ -14,19 +14,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.Duration;
 import java.util.List;
 
 @Controller
 public class ApontamentoController {
-    /*
-        // DOCUMENTAR O CÓDIGO
-        // CRIAR EXCEÇÕES
-            INTERESSANTE
-            * MEDIR O DESEMPENHO DA APLICAÇÃO
 
-     */
     @Autowired
     private ApontamentoRepository repository;
 
@@ -39,12 +34,18 @@ public class ApontamentoController {
     @Value("${EMAIL_USER_RECEIVER}") String destinatario;
 
     @PostMapping("apontamentos/form/save")
-    public String saveAPontamento(@ModelAttribute("apontamentos") ApontamentosForm list, Authentication authentication, Model model) {
+    public String saveAPontamento(@ModelAttribute("apontamentos") ApontamentosForm list,
+                                  Authentication authentication,
+                                  Model model,
+                                  RedirectAttributes attributes) {
 
         String emailLogado = authentication.getName();
 
         Funcionario funcionario = funcionarioRepository.findByEmail(emailLogado)
                 .orElseThrow(() -> new RuntimeException("erro ao buscar funcionário"));
+
+        Funcionario gestor = funcionarioRepository.findByMatriculaWithGestor(funcionario.getMatricula())
+                .orElse(funcionario);
 
         var unidadeGlobal = list.getItens().get(0).getUnidade();
         var dataGlobal = list.getItens().get(0).getData();
@@ -93,25 +94,28 @@ public class ApontamentoController {
             model.addAttribute("apontamentos", list);
             return "index";
         }
+
+
+
         repository.saveAll(itensParaSalvar);
 
+
         // lógica que pega o usuário do gestor e envia a menssagem pelo email dele
-
-        Funcionario gestor = funcionarioRepository.findByMatriculaWithGestor(funcionario.getMatricula())
-                .orElse(funcionario);
-
-
+        //  valida se o gestor existe
         if(gestor.getGestor() != null){
             String emailGestor = gestor.getGestor().getEmail();
-
+            // valida se o seu email é válido
             if(emailGestor != null && emailGestor.contains("@")){
-                enviarEmail.enviarEmail(list, emailGestor);
-                System.out.println("email enviado "+ emailGestor);
+                try {
+                    enviarEmail.enviarEmail(list, emailGestor);
+                } catch (Exception e) {
+                    System.err.println("erro ao enviar email");
+                }
             } else {
                 System.err.println("o gestor possui email mas é invalido");
             }
         } else {
-            System.err.println("não possui gestor");
+            System.err.println("o usuário não possui gestor");
         }
 
         return "redirect:/success";
