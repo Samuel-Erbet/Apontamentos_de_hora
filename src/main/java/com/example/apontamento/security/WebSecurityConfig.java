@@ -17,13 +17,13 @@ public class WebSecurityConfig {
 
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http){
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 
         http
-                .csrf(csrf -> csrf.disable())
+
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/apontamentos/visualizar/**").hasRole("ADMIN")
-                        .requestMatchers("/login","/css/**","/js/**").permitAll()
+                        .requestMatchers("/favicon.ico","/login","/css/**","/js/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form

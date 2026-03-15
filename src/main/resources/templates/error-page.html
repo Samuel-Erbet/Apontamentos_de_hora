@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erro - algo deu errado</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}">
+    <link rel="stylesheet" th:href="@{/css/error-page.css}">
+
+</head>
+<body>
+
+<div class="error-container">
+    <div class="icon">⚠️</div>
+    <h1>Algo deu errado!</h1>
+
+    <p>Não conseguimos processar sua solicitação no momento. Isso pode ser uma instabilidade temporária no banco de dados.</p>
+
+    <div class="debug-msg" th:if="${error}">
+        <strong>Detalhe técnico:</strong> <span th:text="${error}">Erro desconhecido</span>
+    </div>
+
+    <br>
+    <a href="/" class="btn-back">Voltar para o Início</a>
+</div>
+
+</body>
+</html>

@@ -34,23 +34,21 @@ public class ApontamentoController {
     @Value("${EMAIL_USER_RECEIVER}") String destinatario;
 
     @PostMapping("apontamentos/form/save")
-    public String saveAPontamento(@ModelAttribute("apontamentos") ApontamentosForm list,
+    public String saveAPontamento(@ModelAttribute ApontamentosForm list,
                                   Authentication authentication,
-                                  Model model,
-                                  RedirectAttributes attributes) {
-
+                                  Model model
+                                  ) {
         String emailLogado = authentication.getName();
 
         Funcionario funcionario = funcionarioRepository.findByEmail(emailLogado)
                 .orElseThrow(() -> new RuntimeException("erro ao buscar funcionário"));
 
-        Funcionario gestor = funcionarioRepository.findByMatriculaWithGestor(funcionario.getMatricula())
-                .orElse(funcionario);
+        Funcionario gestor = funcionario.getGestor();
 
-        var unidadeGlobal = list.getItens().get(0).getUnidade();
-        var dataGlobal = list.getItens().get(0).getData();
+        var unidade = list.getItens().get(0).getUnidade();
+        var data = list.getItens().get(0).getData();
 
-        if (unidadeGlobal == null || unidadeGlobal.isBlank() || dataGlobal == null) {
+        if (unidade == null || unidade.isBlank() || data == null) {
             model.addAttribute("error", "preencha a UNIDADE e a DATA ");
             return "index";
         }
@@ -67,9 +65,9 @@ public class ApontamentoController {
         double totalMinutos = 0;
 
         for (Apontamentos ap : itensParaSalvar) {
-            ap.setUnidade(unidadeGlobal);
-            ap.setData(dataGlobal);
-            ap.setFuncionario(list.getFuncionario());
+            ap.setUnidade(unidade);
+            ap.setData(data);
+            ap.setFuncionario(funcionario);
 
             if (ap.getDescricao() == null || ap.getDescricao().isBlank()) {
                 model.addAttribute("error", "Faltou a descrição em uma das tarefas");
@@ -96,14 +94,32 @@ public class ApontamentoController {
         }
 
 
-
+        //salva as informações e envia o email
+        System.out.println("1. Total de itens na lista original: " + list.getItens().size());
+        System.out.println("2. Itens que passaram no filtro: " + itensParaSalvar.size());
+        if (!itensParaSalvar.isEmpty()) {
+            System.out.println("3. Descrição do primeiro item: " + itensParaSalvar.get(0).getDescricao());
+        }
         repository.saveAll(itensParaSalvar);
+        validateEmail(gestor, list);
 
 
-        // lógica que pega o usuário do gestor e envia a menssagem pelo email dele
-        //  valida se o gestor existe
-        if(gestor.getGestor() != null){
-            String emailGestor = gestor.getGestor().getEmail();
+
+        return "redirect:/success";
+    }
+
+
+    @GetMapping("/success")
+    public String sucesso(){
+        return "success";
+    }
+
+
+    // lógica que pega o usuário do gestor e envia a menssagem pelo email dele
+    //  valida se o gestor existe
+    public void validateEmail(Funcionario gestor, ApontamentosForm list){
+        if(gestor != null){
+            String emailGestor = gestor.getEmail();
             // valida se o seu email é válido
             if(emailGestor != null && emailGestor.contains("@")){
                 try {
@@ -117,17 +133,6 @@ public class ApontamentoController {
         } else {
             System.err.println("o usuário não possui gestor");
         }
-
-        return "redirect:/success";
     }
-
-
-    @GetMapping("/success")
-    public String sucesso(){
-        return "success";
-    }
-
-
-
 
 }

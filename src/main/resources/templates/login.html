@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Apontamentos</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}">
     <link rel="stylesheet" th:href="@{/css/login.css}">
 </head>
 <body>
@@ -18,7 +19,7 @@
     <p class="error" th:if="${param.error}" style="color: red; margin-bottom: 10px;">Nome ou matrícula inválidos.</p>
 
         <div class="form-login">
-            <label class="form-label">Nome de usuário:</label>
+            <label class="form-label">Email:</label>
             <input class="form-input" type="text" name="username" required>
         </div>
 

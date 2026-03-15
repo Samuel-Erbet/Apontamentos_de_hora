@@ -3,6 +3,7 @@ package com.example.apontamento.service;
 import brevo.ApiClient;
 import com.example.apontamento.Entity.Apontamentos;
 import com.example.apontamento.Entity.ApontamentosForm;
+import com.example.apontamento.Entity.Funcionario;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -104,4 +105,6 @@ public class EmailService {
             System.err.println("Erro ao enviar planilha: " + e.getMessage());
         }
     }
+
+
 }

@@ -18,7 +18,7 @@ public class Apontamentos {
     private Funcionario funcionario ;
 
     @Column(nullable = false)
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDate data;
 
     @Column(nullable = false)
@@ -27,9 +27,11 @@ public class Apontamentos {
     private String numeroOs;
 
     @Column(nullable = false)
+    @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalTime horarioInicio;
 
     @Column(nullable = false)
+    @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalTime horarioFim;
 
     @Column(nullable = false)
