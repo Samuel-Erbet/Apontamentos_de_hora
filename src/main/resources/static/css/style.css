@@ -266,3 +266,13 @@ h1 {
             flex-wrap: wrap;
         }
     }
+
+.error-msg {
+    color: #d93025;
+    font-size: 0.75rem;
+    font-weight: bold;
+    position: absolute;
+    bottom: 2px;
+    left: 2px;
+    display: block;
+}

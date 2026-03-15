@@ -6,11 +6,13 @@ import com.example.apontamento.Entity.Funcionario;
 import com.example.apontamento.repository.ApontamentoRepository;
 import com.example.apontamento.repository.FuncionariosRepository;
 import com.example.apontamento.service.EmailService;
+import jakarta.websocket.Decoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,9 +36,10 @@ public class ApontamentoController {
     @Value("${EMAIL_USER_RECEIVER}") String destinatario;
 
     @PostMapping("apontamentos/form/save")
-    public String saveAPontamento(@ModelAttribute ApontamentosForm list,
+    public String saveAPontamento(@ModelAttribute("apontamentos") ApontamentosForm list,
                                   Authentication authentication,
-                                  Model model
+                                  Model model,
+                                  BindingResult result
                                   ) {
         String emailLogado = authentication.getName();
 

@@ -33,20 +33,22 @@
 
             <div class="fields">
                 <label class="form-label">turno:</label>
-                <input class="form-control-input readonly-field" type="text" th:value="*{funcionario.turno}" readonly>
+                <input class="form-control-input" type="text" th:value="*{funcionario.turno}" readonly>
                 <span class="error-msg" style="color: red; font-size: 0.8rem;"></span>
             </div>
 
             <div class="fields">
                 <label class="form-label">unidade:</label>
                 <input class="form-control-input" type="text" th:field="*{itens[0].unidade}">
-                <span class="error-msg" style="color: red; font-size: 0.8rem;"></span>
+                <span class="error-msg" th:if="${#fields.hasErrors('itens[0].unidade')}" th:errors="*{itens[0].unidade}">
+                    Erro na unidade
+                </span>
             </div>
 
             <div class="fields">
                 <label class="form-label">data:</label>
                 <input class="form-control-input" type="date" th:field="*{itens[0].data}">
-                <span class="error-msg" style="color: red; font-size: 0.8rem;"></span>
+
             </div>
 
     </div>
